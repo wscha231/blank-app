@@ -472,7 +472,7 @@ class PatchTSTReg(nn.Module):
         self.head = nn.Linear(d_model, 1)
 
     def forward(self, x):
-        B, T, F = x.shape
+        B, T, feat_dim = x.shape
         p = self.patch_len
         if T < p:
             pad = p - T
@@ -482,7 +482,7 @@ class PatchTSTReg(nn.Module):
         if pad_len:
             x = F.pad(x, (0, 0, pad_len, 0))
             T = T + pad_len
-        x = x.reshape(B, T // p, p * F)
+        x = x.reshape(B, T // p, p * feat_dim)
         h = self.proj(x)
         h = self.enc(h)
         last = h[:, -1, :]
